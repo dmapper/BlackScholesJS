@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<!--
+The MIT License (MIT)
+
+Copyright (c) 2014 Stefano Paggi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<html>
+    <head>
+
+        <title>Black-Scholes Calc</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Stefano Paggi" />
+<meta name="description" content="Black-Scholes Model fair option price calculator in JavaScript">
+<meta name="keywords" content="JS,js,JavaScript,BlackScholes,Black-Scholes,fair option price,option,price calculator">
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        
+        <script src="https://raw.githubusercontent.com/paggist/BlackScholesJS/master/js/blackscholes.js"></script>
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {font: 10pt arial;}
+            #middle {margin-left: auto; margin-right: auto; width: 600px; text-align: center;}
+            .margins {margin-top: 20px}
+            .numinput,.num {text-align: right}
+            td {text-align: left}
+        </style>
+    </head>
+    <body>
+
+
+
+        <div id="middle">
+            <h2>Black-Scholes JS</h2>
+            <div class="margins input-group">
+                <span class="input-group-addon">underl. price</span>
+                <input id="stock" type="text" class="numinput form-control"  placeholder="e.g.: 41.5">
+            </div>
+            <div class="margins input-group">
+                <span class="input-group-addon">strike</span>
+                <input id="strike" type="text" class="numinput form-control"  placeholder="e.g.: 34">
+            </div>
+            <div class="margins input-group">
+                <span class="input-group-addon">volatility</span>
+                <input id="vola" type="text" class="numinput form-control" placeholder="e.g.: 0.4 (corresponds 40%)">
+            </div>
+            <div class="margins input-group">
+                <span class="input-group-addon">interest</span>
+                <input id="interest" type="text" class="numinput form-control"  placeholder="e.g.: 0.1 (corresponds 10%)">
+            </div>
+            <div class="margins input-group">
+                <span class="input-group-addon">term</span>
+                <input id="term" type="text" class="numinput form-control"  placeholder="e.g.: 2 (corresponds 2 years)">
+            </div>
+       
+                <button type="button" class="margins btn btn-default" onclick="calculate()">calculate</button>
+          
+            <div id="table" class="margins panel panel-default" hidden>
+                <table class="table">
+                    <tr>
+                        <td><B>call</B></td>
+                        <td id="callprice" class="num"></td>
+                        <td><B>put</B></td>
+                        <td id="putprice" class="num"></td>
+
+                    </tr>
+                    <tr>    
+                        <td>call delta</td>
+                        <td id="calldelta" class="num"></td>
+                        <td>put delta</td>
+                        <td id="putdelta" class="num"></td>
+                    </tr>
+                    <tr>    
+                        <td colspan="2">gamma</td>
+                        <td id="gamma" class="num" colspan="2"></td>
+                    </tr>
+                    <tr>    
+                        <td>call theta</td>
+                        <td id="calltheta" class="num"></td>
+                        <td>put theta</td>
+                        <td id="puttheta" class="num"></td>
+                    </tr>
+                    <tr>    
+                        <td>call rho</td>
+                        <td id="callrho" class="num"></td>
+                        <td>put rho</td>
+                        <td id="putrho" class="num"></td>
+                    </tr>
+                    <tr>    
+                        <td colspan="2">vega</td>
+                        <td id="vega" class="num" colspan="2"></td>
+                    </tr>
+                    <tr>    
+                        <td>call omega</td>
+                        <td id="callomega" class="num"></td>
+                        <td>put omega</td>
+                        <td id="putomega" class="num"></td>
+                    </tr>
+
+                </table>
+            </div>
+
+           
+        </div>
+        <script>
+
+
+
+            function getBSHolder() {
+                //get val...
+                var stock = parseFloat(document.getElementById("stock").value);
+                var strike = parseFloat(document.getElementById("strike").value);
+                var vola = parseFloat(document.getElementById("vola").value);
+                var interest = parseFloat(document.getElementById("interest").value);
+                var term = parseFloat(document.getElementById("term").value);
+                return new BSHolder(stock, strike, interest, vola, term);
+            }
+
+            function calculate() {
+                //fill new BSHolder instance
+                var holder = getBSHolder();
+
+                //calc...
+                document.getElementById("callprice").innerHTML = BS.call(holder);
+                document.getElementById("putprice").innerHTML = BS.put(holder);
+                document.getElementById("calldelta").innerHTML = BS.cdelta(holder).toFixed(5);
+                document.getElementById("putdelta").innerHTML = BS.pdelta(holder).toFixed(5);
+                document.getElementById("gamma").innerHTML = BS.gamma(holder).toFixed(5);
+                document.getElementById("calltheta").innerHTML = BS.ctheta(holder).toFixed(5);
+                document.getElementById("puttheta").innerHTML = BS.ptheta(holder).toFixed(5);
+                document.getElementById("callrho").innerHTML = BS.crho(holder).toFixed(5);
+                document.getElementById("putrho").innerHTML = BS.prho(holder).toFixed(5);
+                document.getElementById("vega").innerHTML = BS.vega(holder).toFixed(5);
+                document.getElementById("callomega").innerHTML = BS.comega(holder).toFixed(5);
+                document.getElementById("putomega").innerHTML = BS.pomega(holder).toFixed(5);
+
+                //show table
+                document.getElementById("table").style.display = "block";
+
+                return holder;
+
+            }
+
+           
+        </script>
+
+    </body>
+</html>
