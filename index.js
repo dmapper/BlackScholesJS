@@ -220,8 +220,7 @@ var BS = {
         return res;
     }
 };
-var graph = {
-};
+
 /**
  * Behälter für die BlackScholes Variablen
  * 
@@ -289,3 +288,6 @@ function BSHolder(
 
 }
 ;
+
+module.exports.BS = BS;
+module.exports.BSHolder = BSHolder;
