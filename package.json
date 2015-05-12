@@ -1,0 +1,19 @@
+{
+  "name": "node-black-scholes",
+  "version": "1.0.0",
+  "description": "Black-Scholes fair option price calculator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dmapper/BlackScholesJS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmapper/BlackScholesJS/issues"
+  },
+  "homepage": "https://github.com/dmapper/BlackScholesJS"
+}
